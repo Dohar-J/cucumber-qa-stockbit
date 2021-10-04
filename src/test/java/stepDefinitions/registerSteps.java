@@ -7,16 +7,19 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.concurrent.TimeUnit;
 import java.util.Random;
 
 public class registerSteps {
     WebDriver driver;
+    WebDriverWait wait;
 
     @Given("user open chrome and start application to register")
     public void user_open_chrome_and_start_application_to_register() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\j_doh\\Downloads\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
 
         driver = new ChromeDriver();
         driver.manage().window().maximize();
@@ -25,8 +28,6 @@ public class registerSteps {
 
     @When("user click on sign up button")
     public void userClickOnSignUpButton() {
-
-
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.findElement(By.xpath("//a[@class='register-lnd']")).click();
     }
@@ -41,6 +42,7 @@ public class registerSteps {
 
     @And("user click button register with email")
     public void userClickOnRegisterwithEmailButton() {
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.findElement(By.xpath("//a[@class='loginlogin register-email']")).click();
     }
 
@@ -51,7 +53,7 @@ public class registerSteps {
     }
 
     @When("user fill register form")
-    public void userFillRegisterForm() {
+    public void userFillRegisterForm() throws InterruptedException {
         String email = generateRandomString(10);
         String name = generateRandomString(10);
         String username = generateRandomString(10);
@@ -116,4 +118,84 @@ public class registerSteps {
         return sb.toString();
     }
 
+    @When("user fill register form with wrong email format")
+    public void userFillRegisterFormWithWrongFormat() throws InterruptedException {
+        String email = generateRandomString(10);
+        String name = generateRandomString(10);
+        String username = generateRandomString(10);
+
+        WebElement nameField = driver.findElement(By.xpath("//input[@class='loginborder draw']"));
+        WebElement emailField = driver.findElement(By.xpath("(//input[@class='loginborder draw'])[2]"));
+
+        nameField.sendKeys(name);
+        emailField.sendKeys(email);
+        emailField.click();
+
+    }
+
+    @Then("user can see error message for wrong format email")
+    public void userCanSeeErrorMessageForWrongFormatEmail() {
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        assert (driver.findElement(By.xpath("//span[@class='errormsg'])[2]")).isDisplayed());
+    }
+
+    @When("user fill register form with password didn't match")
+    public void userFillRegisterFormWithPasswordDidnTMatch() {
+        String email = generateRandomString(10);
+        String name = generateRandomString(10);
+        String username = generateRandomString(10);
+
+        WebElement nameField = driver.findElement(By.xpath("//input[@class='loginborder draw']"));
+        WebElement emailField = driver.findElement(By.xpath("(//input[@class='loginborder draw'])[2]"));
+        WebElement usernameField = driver.findElement(By.xpath("(//input[@class='loginborder draw'])[3]"));
+        WebElement passwordField = driver.findElement(By.xpath("//input[@type='password']"));
+        WebElement confirmPasswordFielddriver=  driver.findElement(By.xpath("(//input[@type='password'])[2]"));
+
+        nameField.sendKeys(name);
+        emailField.sendKeys(email);
+        usernameField.sendKeys(username);
+        passwordField.sendKeys("Tester123");
+        passwordField.click();
+        confirmPasswordFielddriver.sendKeys("Tester123455");
+        confirmPasswordFielddriver.click();
+    }
+
+    @Then("user can see error message for wrong confirmation password")
+    public void userCanSeeErrorMessageForWrongConfirmationPassword() {
+        assert (driver.findElement(By.xpath("//label[text()='Confirm Password']/following-sibling::span")).isDisplayed());
+    }
+
+    @When("user fill register form with email and username has been registered")
+    public void userFillRegisterFormWithEmailAndUsernameHasBeenRegistered() {
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        String email = "josua.dohar@gmail.com";
+        String name = generateRandomString(10);
+        String username = "doharJ";
+
+        WebElement nameField = driver.findElement(By.xpath("//input[@class='loginborder draw']"));
+        WebElement emailField = driver.findElement(By.xpath("(//input[@class='loginborder draw'])[2]"));
+        WebElement usernameField = driver.findElement(By.xpath("(//input[@class='loginborder draw'])[3]"));
+        WebElement passwordField = driver.findElement(By.xpath("//input[@type='password']"));
+        WebElement confirmPasswordFielddriver=  driver.findElement(By.xpath("(//input[@type='password'])[2]"));
+
+
+        nameField.sendKeys(name);
+        emailField.sendKeys(email);
+        emailField.click();
+        usernameField.sendKeys(username);
+        usernameField.click();
+    }
+
+    @Then("user can see error message for email has been registered")
+    public void userCanSeeErrorMessageForEmailHasBeenRegistered() {
+        assert(driver.findElement(By.xpath("(//span[@class='errormsg'])[2]"))).isDisplayed();
+
+    }
+
+    @And("user can see error message for username has been registered")
+    public void userCanSeeErrorMessageForUsernameHasBeenRegistered() {
+        assert (driver.findElement(By.xpath("(//span[@class='errormsg'])[3]"))).isDisplayed();
+    }
 }

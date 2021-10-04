@@ -15,7 +15,7 @@ public class loginSteps {
 
     @Given("user open chrome and start application")
     public void user_open_chrome_and_start_application() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\j_doh\\Downloads\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
 
         driver = new ChromeDriver();
         driver.manage().window().maximize();
@@ -76,4 +76,5 @@ public class loginSteps {
         driver.findElement(By.id("username")).sendKeys("example@mail.com");
         driver.findElement(By.id("password")).sendKeys("Doharj012");
     }
+
 }
