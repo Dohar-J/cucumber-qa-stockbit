@@ -91,6 +91,11 @@ public class registerSteps {
 
         driver.findElement(By.xpath("//input[@type='tel']")).sendKeys(Long.toString(randomNum));
     }
+
+    @Then("user got captcha")
+    public void userGotCaptcha() {
+        driver.findElement(By.className("g-recaptcha"));
+    }
     public static String generateRandomString(int length)
     {
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -110,4 +115,5 @@ public class registerSteps {
         }
         return sb.toString();
     }
+
 }

@@ -10,4 +10,4 @@ Feature: Register
     And user click on register button
     Then user can sms verification page
     When user input phone number
-    Then user 
+    Then user got captcha
